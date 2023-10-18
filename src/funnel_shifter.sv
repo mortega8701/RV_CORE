@@ -7,8 +7,10 @@ module funnel_shifter #(parameter N=5) (
 );
 
     logic[2**(N+1)-1:0] funnel;
+    logic[N:0] up, down;
+
     assign funnel = {upper, downer};
-    assign shift = (direction == 1'b0) ? 
-        funnel[(2**N-1+shamt):(shamt)] : 
-        funnel[(2**(N+1)-1-shamt):(2**N-1-shamt)];
+    assign up = (direction == 1'b0) ? (2**N-1)+shamt : (2**(N+1)-1)-shamt;
+    assign down = (direction == 1'b0) ? shamt : (2**N-1)-shamt;
+    assign shift = funnel[up : down];
 endmodule
