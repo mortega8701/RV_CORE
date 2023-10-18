@@ -18,9 +18,9 @@ module data_mem #(parameter N=12)(
     end
 
     always_ff @(posedge clk) begin
-        if (we == 1'b0)
-            RAM[a[N-1:0]] <= wd;
+        if (we == 1'b1)
+            RAM[a[N-1:2]] <= wd;
     end
 
-    assign rd = RAM[a[N-1:0]];
+    assign rd = RAM[a[N-1:2]];
 endmodule
