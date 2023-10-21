@@ -1,18 +1,18 @@
 module tb_data_mem();
-	integer vindx;
-	logic[31:0] address;
-    logic write_enab;
-    logic[31:0] write;
-	logic[31:0] read, read_exp;
+    integer vindx;
+    logic[31:0] a;
+    logic we;
+    logic[31:0] wd;
+    logic[31:0] rd, rd_exp;
     logic clk;
-	logic[96:0] vector_in[0 : 10];
+    logic[96:0] vector_in[0 : 10];
 
-	data_mem dut(.a(address), .we(write_enab), .wd(write), .clk(clk), .rd(read));
+    data_mem dut(.a(a), .we(we), .wd(wd), .clk(clk), .rd(rd));
 
-	initial begin
-		$readmemh("input_data_mem.txt", vector_in);
-		$dumpfile("waveform_data_mem.vcd");
-		$dumpvars(0, tb_data_mem);
+    initial begin
+        $readmemh("input_data_mem.txt", vector_in);
+        $dumpfile("waveform_data_mem.vcd");
+	    $dumpvars(0, tb_data_mem);
         vindx = 0;
     end
 
@@ -22,12 +22,12 @@ module tb_data_mem();
     end
 
     always @(posedge clk) begin
-		{write_enab, address, write, read_exp} = vector_in[vindx];
+		{we, a, wd, rd_exp} = vector_in[vindx];
 	end
 
     always @(negedge clk) begin
-        if (read !== read_exp) begin
-            $display("Failed at line %d : address=%h read=%h", (vindx+1), address, read);
+        if (rd !== rd_exp) begin
+            $display("Failed at line %d : a=%h, rd=%h, wd=%h, we=%b", (vindx+1), a, rd, wd, we);
         end
         vindx++;
         if (vector_in[vindx] === 97'bx) begin

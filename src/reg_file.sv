@@ -8,6 +8,10 @@ module reg_file (
 
     logic[31:0][31:0] rf;
 
+    initial begin
+        rf = {32{32'b0}};
+    end
+
     always_ff @(posedge clk) begin
         if (we3 == 1'b1) begin
             rf[a3] <= wd3;
