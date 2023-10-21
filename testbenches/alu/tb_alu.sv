@@ -1,5 +1,5 @@
 module tb_ALU();
-    localparam vindx = 16;
+    localparam vindx = 10;
     logic[31:0] src_a, src_b;
     logic[3:0] ctrl;
     logic[31:0] result, result_exp;
