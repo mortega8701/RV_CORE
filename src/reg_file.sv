@@ -18,6 +18,7 @@ module reg_file (
         end
     end
 
+    //Assure to x0 always read 0
     assign rd1 = (a1 != 5'b0) ? rf[a1] : 32'b0;
     assign rd2 = (a2 != 5'b0) ? rf[a2] : 32'b0;
 endmodule

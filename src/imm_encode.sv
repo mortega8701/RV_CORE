@@ -6,11 +6,17 @@ module imm_encode(
 
     always_comb begin
         case(instr_type)
-            0 : imm = {20{instr[31]}, instr[31:20]}; //I-Instr
-            1 : imm = {20{instr[31]}, instr[31:25], instr[11:7]}; //S-instr
-            2 : imm = {20{instr[31]}, instr[7], instr[30:25], instr[11:8], 1'b0}; //B-instr
-            3 : imm = {instr[31:12], 12'b0}; //U-instr
-            4 : imm = {12{instr[31]}, instr[19:12], instr[20], instr[30:21], 1'b0}; //J-instr
+            //I-Instr
+            3'b000 : imm = {{20{instr[31]}}, instr[31:20]};
+            //S-Instr
+            3'b001 : imm = {{20{instr[31]}}, instr[31:25], instr[11:7]};
+            //B-Instr
+            3'b010 : imm = {{20{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0};
+            //U-Instr
+            3'b011 : imm = {instr[31:12], 12'b0};
+            //J-Instr
+            3'b100 : imm = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0};
+            //Encode Error
             default : imm = 32'bx;
         endcase
     end

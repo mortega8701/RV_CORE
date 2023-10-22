@@ -1,8 +1,4 @@
-//Memory address can point to (2**32)/4 diferent instrctions
-//This is a lot of memory so is needed to limit with a parameter
-//we select how many bits of real address we can afford to reduce
-//RAM memory (Default 12 bits = 4096 bytes = 1024 word address)
-
+//(Default 12 bits = 4096 bytes = 1024 word address)
 module data_mem #(parameter N=12)(
     input logic clk,
     input logic we,
@@ -17,6 +13,7 @@ module data_mem #(parameter N=12)(
         $readmemh("LOAD_DATA.txt", RAM);
     end
 
+    //Word align for read and write
     always_ff @(posedge clk) begin
         if (we == 1'b1)
             RAM[a[N-1:2]] <= wd;
