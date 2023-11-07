@@ -10,6 +10,5 @@ module instr_mem #(parameter N=12)(
         $readmemh("RV_INSTR.txt", RAM);
     end
 
-    //Word align for read
-    assign rd = RAM[a[N-1:2]];
+    assign rd = RAM[a[N-1:2]]; //4 Bytes alignment
 endmodule

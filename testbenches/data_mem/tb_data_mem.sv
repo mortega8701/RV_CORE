@@ -12,7 +12,7 @@ module tb_data_mem();
     initial begin
         $readmemh("input_data_mem.txt", vector_in);
         $dumpfile("waveform_data_mem.vcd");
-	    $dumpvars(0, tb_data_mem);
+        $dumpvars(0, tb_data_mem);
         vindx = 0;
     end
 
@@ -22,8 +22,8 @@ module tb_data_mem();
     end
 
     always @(posedge clk) begin
-		{we, a, wd, rd_exp} = vector_in[vindx];
-	end
+        {we, a, wd, rd_exp} = vector_in[vindx];
+    end
 
     always @(negedge clk) begin
         if (rd !== rd_exp) begin
@@ -34,5 +34,5 @@ module tb_data_mem();
             $display("Test finished");
             $stop;
         end
-	end
+    end
 endmodule

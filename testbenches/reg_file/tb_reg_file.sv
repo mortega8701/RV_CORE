@@ -14,7 +14,7 @@ module tb_reg_file();
         $readmemh("input_reg_file1.txt", vector_in1);
         $readmemb("input_reg_file2.txt", vector_in2);
         $dumpfile("waveform_reg_file.vcd");
-	    $dumpvars(0, tb_reg_file);
+        $dumpvars(0, tb_reg_file);
         vindx = 0;
     end
 
@@ -26,7 +26,7 @@ module tb_reg_file();
     always @(posedge clk) begin
         {rd1_exp, rd2_exp, wd3} = vector_in1[vindx];
         {we3, a1, a2, a3} = vector_in2[vindx];
-	end
+    end
 
     always @(negedge clk) begin
         if (rd1 !== rd1_exp && rd2 !== rd2_exp) begin
@@ -37,5 +37,5 @@ module tb_reg_file();
             $display("Test finished");
             $stop;
         end
-	end
+    end
 endmodule
