@@ -1,2 +1,2 @@
-*.out
+**/obj_dir/
 *.vcd

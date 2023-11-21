@@ -4,11 +4,12 @@ module instr_mem #(parameter N=12)(
     output logic[31:0] rd
 );
 
-    logic[31:0] RAM[0:2**N-1];
+    logic[31:0] RAM[0:2**(N-2)-1];
 
     initial begin
         $readmemh("RV_INSTR.txt", RAM);
     end
 
-    assign rd = RAM[a[N-1:2]]; //4 Bytes alignment
+    //4 Bytes alignment
+    assign rd = RAM[a[N-1:2]];
 endmodule

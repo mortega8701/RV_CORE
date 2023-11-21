@@ -6,10 +6,12 @@ module reg_file (
     output logic[31:0] rd1, rd2
 );
 
-    logic[31:0][31:0] rf;
+    logic[31:0] rf[31:0];
 
     initial begin
-        rf = {32{32'b0}};
+        for(integer i=0; i<32; i++) begin
+            rf[i] = 32'b0;
+        end
     end
 
     always_ff @(posedge clk) begin
