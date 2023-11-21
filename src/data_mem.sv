@@ -1,5 +1,5 @@
-//(Default 16 bits = 65536 Bytes)
-module data_mem #(parameter N=16)(
+//(Default 12 bits = 4096 Bytes)
+module data_mem #(parameter N=12)(
     input logic clk,
     input logic we,
     input logic[1:0] st,
@@ -11,27 +11,47 @@ module data_mem #(parameter N=16)(
 
     logic[7:0] RAM[0:2**N-1];
 
+    logic[N-1:0] wd_a; //real word address
+    logic[N-1:0] hf_a; //real half address
+    logic[N-1:0] b_a;  //real byte address
+
+    assign wd_a = {a[N-1:2], 2'b0};
+    assign hf_a = {a[N-1:1], 1'b0};
+    assign b_a = a[N-1:0];
+
     initial begin
         $readmemh("LOAD_DATA.txt", RAM);
     end
 
-    //NO Byte alignment
     always_ff @(posedge clk) begin
         if (we == 1'b1) begin
             case (st)
-                2'b10 : RAM[a] <= wd[31:0]; //sw
-                2'b01 : RAM[a] <= wd[15:0]; //sh
-                2'b00 : RAM[a] <= wd[7:0];  //sb
-                default : RAM[a] <= RAM[a]; //Store Error
+                //sw (4 Bytes alignment)
+                2'b10 : {RAM[wd_a+3], RAM[wd_a+2], RAM[wd_a+1], RAM[wd_a]} <= wd[31:0];
+                //sh (2 Bytes alignment)
+                2'b01 : {RAM[hf_a+1], RAM[hf_a]} <= wd[15:0];
+                //sb (Byte alignment)
+                2'b00 : RAM[b_a] <= wd[7:0];
+                //Store Error
+                default : RAM[wd_a] <= RAM[wd_a];
             endcase
         end
     end
 
-    //NO Byte alignment
-    assign rd = (lt == 3'b110) ? {RAM[a+3], RAM[a+2], RAM[a+1], RAM[a]} : //lw
-                (lt == 3'b101) ? {{16{RAM[a+1][7]}}, RAM[a+1], RAM[a]} :  //lh
-                (lt == 3'b100) ? {{24{RAM[a][7]}}, RAM[a]} :              //lb
-                (lt == 3'b001) ? {{16'b0}, RAM[a+1], RAM[a]} :            //lhu
-                (lt == 3'b000) ? {{24'b0}, RAM[a]} :                      //lbu
-                32'bx;                                                    //Read Error
+    always_comb begin
+        case(lt)
+            //lw (4 Bytes alignment)
+            3'b110 : rd = {RAM[wd_a+3], RAM[wd_a+2], RAM[wd_a+1], RAM[wd_a]};
+            //lh (2 Bytes alignment)
+            3'b101 : rd = {{16{RAM[hf_a+1][7]}}, RAM[hf_a+1], RAM[hf_a]};
+            //lb (Byte alignment)
+            3'b100 : rd = {{24{RAM[b_a][7]}}, RAM[b_a]};
+            //lhu (2 Bytes alignment)
+            3'b001 : rd = {{16'b0}, RAM[hf_a+1], RAM[hf_a]};
+            //lbu (Byte alignment)
+            3'b000 : rd = {{24'b0}, RAM[b_a]};
+            //Load Error
+            default : rd = 32'bx;
+        endcase
+    end
 endmodule

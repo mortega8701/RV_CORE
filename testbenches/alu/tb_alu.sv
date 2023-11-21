@@ -1,4 +1,4 @@
-module tb_ALU();
+module tb_alu();
     localparam vindx = 12;
     logic[31:0] a, b;
     logic[3:0] ctrl;
@@ -7,13 +7,13 @@ module tb_ALU();
     logic[95:0] vector_in1[0 : vindx - 1];
     logic[6:0] vector_in2[0 : vindx - 1];
 
-    ALU dut(.a(a), .b(b), .ctrl(ctrl), .out(out), .flags(flags));
+    alu dut(.a(a), .b(b), .ctrl(ctrl), .out(out), .flags(flags));
 
     initial begin
         $readmemh("input_ALU1.txt", vector_in1);
         $readmemb("input_ALU2.txt", vector_in2);
         $dumpfile("waveform_ALU.vcd");
-        $dumpvars(0, tb_ALU);
+        $dumpvars(0, tb_alu);
         for (integer i=0; i < vindx; i++)
         begin
             {a, b, out_exp} = vector_in1[i];
