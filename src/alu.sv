@@ -31,12 +31,12 @@ module alu (
             4'b0110 : out = a >> b[4:0];
             //sra, srai
             4'b0111 : out = a >>> b[4:0];
-            //lui
-            4'b1000 : out = b;
             //slt, slti
-            4'b1001 : out = (a < b) ? 1 : 0;
+            4'b1000 : out = (a < b) ? 1 : 0;
             //sltu, sltui
-            4'b1010 : out = ($unsigned(a) < $unsigned(b)) ? 1 : 0;
+            4'b1001 : out = ($unsigned(a) < $unsigned(b)) ? 1 : 0;
+            //lui (buff)
+            4'b1010 : out = b;
             //ALU Error
             default : out = 32'bx;
         endcase

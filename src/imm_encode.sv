@@ -1,5 +1,5 @@
 module imm_encode(
-    input logic[31:0] instr,
+    input logic[31:7] instr,
     input logic[2:0] instr_type,
     output logic[31:0] imm
 );
